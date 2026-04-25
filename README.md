@@ -1,4 +1,4 @@
-# gt-smart-home-bridger
+# gt-smart-home-android
 
 这是基于 [jupiter2021/smart-home-zigbee](https://github.com/jupiter2021/smart-home-zigbee) 的 Android 集成版本，通过 Chaquopy 在 App 内运行 Python。
 
