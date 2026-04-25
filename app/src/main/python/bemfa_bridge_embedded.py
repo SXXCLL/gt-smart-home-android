@@ -60,6 +60,33 @@ def normalize_bemfa_topic(topic: str) -> str:
     return t
 
 
+def bemfa_subscribe_variants(base_topic: str) -> list[str]:
+    """
+    巴法云常见约定：控制台/接口向设备下发控制时，主题常带 `/set` 后缀。
+    标准 MQTT 下订阅 `foo` 不会收到发布到 `foo/set` 的消息，因此需同时订阅两者。
+    """
+    b = normalize_bemfa_topic(base_topic)
+    if not b:
+        return []
+    out = [b]
+    if not b.endswith("/set"):
+        out.append(b + "/set")
+    return out
+
+
+def unique_subscribe_topic_list(*topic_groups: list[str]) -> list[str]:
+    """合并多组 topic，按巴法习惯展开为 基名 + /set，去重并保持顺序。"""
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for group in topic_groups:
+        for t in group:
+            for v in bemfa_subscribe_variants(t):
+                if v not in seen:
+                    seen.add(v)
+                    ordered.append(v)
+    return ordered
+
+
 def parse_ac_command(payload: str):
     """
     解析巴法云 005 空调指令:
@@ -263,19 +290,26 @@ class BemfaBridgeRunner:
                 log_event("NET", f"MQTT connect failed rc={rc}")
                 set_bridge_connected(False, f"connect_failed_rc_{rc}")
                 return
-            all_topics = (
-                list(topic_light_map)
-                + list(topic_hw_scene_map)
-                + list(TOPIC_SCENE_MAP)
-                + list(topic_fresh_map)
-                + list(topic_ac_map)
-                + list(topic_heat_map)
+            all_topics = unique_subscribe_topic_list(
+                list(topic_light_map),
+                list(topic_hw_scene_map),
+                list(TOPIC_SCENE_MAP),
+                list(topic_fresh_map),
+                list(topic_ac_map),
+                list(topic_heat_map),
             )
             for topic in all_topics:
-                client.subscribe(topic, qos=0)
+                try:
+                    client.subscribe(topic, qos=0)
+                except Exception as e:
+                    log_event("WARN", f"MQTT subscribe exception topic={topic}, err={e}")
                 time.sleep(0.1)
-            log.info("Subscribed to %d topics", len(all_topics))
-            log_event("NET", f"MQTT connected and subscribed topics={len(all_topics)}")
+            log.info("Subscribed to %d topic filters", len(all_topics))
+            log_event(
+                "NET",
+                f"MQTT connected and subscribed topic_filters={len(all_topics)} "
+                f"(each device base + /set where applicable)"
+            )
             set_bridge_connected(True, "mqtt_connected")
             report_home_away_status_always_off()
 
