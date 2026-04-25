@@ -1,0 +1,55 @@
+{
+  "gateway": {
+    "ip": "192.168.11.3",
+    "port": 4196
+  },
+  "lights": [
+    { "name": "玄关柜灯带", "dev_no": "0x50", "dev_ch": "0x01", "zone": "玄关", "MQTTTopic": "xuanguandd002" },
+    { "name": "玄关筒灯", "dev_no": "0x50", "dev_ch": "0x02", "zone": "玄关", "MQTTTopic": "xuanguantd002" },
+    { "name": "餐厅灯带", "dev_no": "0x51", "dev_ch": "0x00", "zone": "餐厅", "MQTTTopic": "cantingdd002" },
+    { "name": "餐厅主灯", "dev_no": "0x51", "dev_ch": "0x01", "zone": "餐厅", "MQTTTopic": "cantingzd002" },
+    { "name": "客厅主灯", "dev_no": "0x51", "dev_ch": "0x02", "zone": "客厅", "MQTTTopic": "ketingzd002" },
+    { "name": "餐厅筒灯", "dev_no": "0x52", "dev_ch": "0x00", "zone": "餐厅", "MQTTTopic": "cantingtd002" },
+    { "name": "客厅筒灯", "dev_no": "0x52", "dev_ch": "0x01", "zone": "客厅", "MQTTTopic": "ketingtd002" },
+    { "name": "过道灯", "dev_no": "0x52", "dev_ch": "0x02", "zone": "过道", "MQTTTopic": "guodaod002" },
+    { "name": "主卧灯带", "dev_no": "0x53", "dev_ch": "0x00", "zone": "主卧", "MQTTTopic": "zhuwodd002" },
+    { "name": "主卧衣帽", "dev_no": "0x53", "dev_ch": "0x01", "zone": "主卧", "MQTTTopic": "zhuwoymd002" },
+    { "name": "主卧主灯", "dev_no": "0x55", "dev_ch": "0x00", "zone": "主卧", "MQTTTopic": "zhuwozd002" }
+  ],
+  "scenes": {
+    "hardware": [
+      { "name": "回家", "addr": "0x05", "ch": "0x00", "MQTTTopic": "huijia006" },
+      { "name": "离家", "addr": "0x05", "ch": "0x01", "MQTTTopic": "lijia006" }
+    ],
+    "software": {
+      "全开": ["*"],
+      "客厅": ["客厅主灯", "客厅筒灯"],
+      "餐厅": ["餐厅灯带", "餐厅主灯", "餐厅筒灯"],
+      "主卧": ["主卧灯带", "主卧衣帽", "主卧主灯"],
+      "会客": ["客厅主灯", "客厅筒灯", "餐厅主灯", "餐厅灯带", "餐厅筒灯"],
+      "迎宾": ["玄关柜灯带", "玄关筒灯", "餐厅灯带", "餐厅主灯", "客厅主灯", "餐厅筒灯", "客厅筒灯", "过道灯"],
+      "晚安": ["主卧灯带"]
+    }
+  },
+  "fresh_airs": [
+    { "name": "新风", "dev_no": "0x03", "dev_ch": "0x01", "ch_type": "0x59", "zone": "全屋", "default_speed": "high", "MQTTTopic": "xinfeng005" }
+  ],
+  "acs": [
+    { "name": "客厅空调", "dev_no": "0x01", "dev_ch": "0x04", "zone": "客厅", "MQTTTopic": "ketingkt005" },
+    { "name": "主卧空调", "dev_no": "0x01", "dev_ch": "0x02", "zone": "主卧", "MQTTTopic": "zhuwokt005" },
+    { "name": "次卧空调", "dev_no": "0x01", "dev_ch": "0x03", "zone": "次卧", "MQTTTopic": "ciwokt005" },
+    { "name": "书房空调", "dev_no": "0x01", "dev_ch": "0x01", "zone": "书房", "MQTTTopic": "shufangkt005" }
+  ],
+  "heats": [
+    { "name": "客厅地暖", "dev_no": "0x01", "dev_ch": "0x04", "zone": "客厅", "MQTTTopic": "ketingdn005" },
+    { "name": "主卧地暖", "dev_no": "0x01", "dev_ch": "0x02", "zone": "主卧", "MQTTTopic": "zhuwodn005" },
+    { "name": "次卧地暖", "dev_no": "0x01", "dev_ch": "0x03", "zone": "次卧", "MQTTTopic": "ciwodn005" },
+    { "name": "书房地暖", "dev_no": "0x01", "dev_ch": "0x01", "zone": "书房", "MQTTTopic": "shufangdn005" }
+  ],
+  "bemfa": {
+    "enabled": true,
+    "broker": "bemfa.com",
+    "port": 9501,
+    "key": "123456"
+  }
+}
